@@ -1,6 +1,6 @@
 # Compute Road Coverage in OpenStreetMap
 
-A [TileReduce](https://github.com/mapbox/tile-reduce) processor for calculating OpenStreetMap coverage by country.
+A [TileReduce](https://github.com/mapbox/tile-reduce) processor for calculating OpenStreetMap coverage by country using [OSM QA Tiles](http://osmlab.github.io/osm-qa-tiles/).
 
 See [How Complete is OpenStreetMap?](https://www.mapbox.com/blog/how-complete-is-openstreetmap/).
 
