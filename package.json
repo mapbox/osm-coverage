@@ -1,0 +1,27 @@
+{
+  "name": "osm-coverage",
+  "version": "1.0.0",
+  "description": "Calculates OSM coverage numbers per country",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "binary-split": "^0.1.2",
+    "join-stream": "0.0.0",
+    "lineclip": "^1.1.5",
+    "progress": "^1.1.8",
+    "shapefile": "^0.3.0",
+    "shapefile-stream": "0.0.4",
+    "split": "^1.0.0",
+    "through2": "^2.0.0",
+    "tile-reduce": "^3.0.0",
+    "turf-extent": "^1.0.4",
+    "turf-line-distance": "^1.0.2",
+    "turf-linestring": "^1.0.2",
+    "unzip2": "^0.2.5",
+    "which-polygon": "mapbox/which-polygon#bbox"
+  }
+}
