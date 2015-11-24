@@ -1,4 +1,4 @@
-# Compute Road Mileage in OpenStreetMap
+# Compute Road Coverage in OpenStreetMap
 
 A [TileReduce](https://github.com/mapbox/tile-reduce) processor for calculating OpenStreetMap mileage by country using [OSM QA Tiles](http://osmlab.github.io/osm-qa-tiles/).
 
