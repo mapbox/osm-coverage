@@ -37,7 +37,7 @@ function downloadOsmQa() {
 }
 
 function downloadCountries() {
-  var output = fs.createWriteStream(path.join(__dirname, 'natural-earth-countries.json'));
+  var output = fs.createWriteStream(path.join(__dirname, 'natural-earth-10m-countries.json'));
   output.write('{"type": "FeatureCollection", "features": [');
 
   // Download natural earth shp, unzip, -> read to geojson
@@ -50,7 +50,7 @@ function downloadCountries() {
         .pipe(output)
         .on('close', function () {
           console.log("Done");
-          fs.appendFileSync(path.join(__dirname, 'countries.json'), ']}');
+          fs.appendFileSync(path.join(__dirname, 'natural-earth-10m-countries.json'), ']}');
         })
     });
 }
