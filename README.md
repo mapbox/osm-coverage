@@ -1,14 +1,21 @@
-# osm-coverage
+# Compute Road Coverage in OpenStreetMap
 
-A [TileReduce](https://github.com/mapbox/tile-reduce) processor for calculating OpenStreetMap coverage by country
+A [TileReduce](https://github.com/mapbox/tile-reduce) processor for calculating OpenStreetMap coverage by country.
 
-## installation
+See [How Complete is OpenStreetMap?](https://www.mapbox.com/blog/how-complete-is-openstreetmap/).
+
+    # Usage in short (more command options below)
+    npm install
+    node download.js --all
+    node index.js > output.json
+
+## Installation
 
 ```
 npm install 
 ```
 
-## downloading data
+## Downloading data
 
 
 `osm-coverage` requires two data sources
@@ -16,7 +23,7 @@ npm install
 - Country boundaries
 - OSM QA Tiles
 
-### all sources
+### All sources
 
 Both sources can be conveniently downloaded using the `download.js` script in this repo.
 
@@ -25,7 +32,7 @@ node download.js --all
 ```
 
 
-### only country boundaries
+### Only country boundaries
 
 ```sh
 node download.js --countries
@@ -47,7 +54,7 @@ If you wish to download QA tiles yourself:
 - Use `gunzip` or any other archiving tool that can expand .gz files to expand OSM QA tiles
 
 
-## running
+## Running
 
 When executing the TileReduce task, you may provide a bounding box to select tiles. For example:
 
