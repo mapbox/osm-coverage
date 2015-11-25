@@ -43,21 +43,16 @@ module.exports = function(tileLayers, tile, write, done) {
   var state = findState(tile, stateIndex);
 
   var resultClasses = {};
-  resultClasses[country] = {
+  resultClasses[state] = {
     "classified": {},
     "raw": {}
   };
-  // resultClasses[states] = {
-  //   "classified": {},
-  //   "raw": {}
-  // };
 
   for (var i = 0; i < tileLayers.osm.osm.length; i++) {
     var ft = tileLayers.osm.osm.feature(i);
 
     if (ft.properties.highway) {
-      handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[country]);
-      //handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[states]);
+      handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[state]);
     }
   }
 
@@ -77,7 +72,7 @@ function handleRoad(road, bbox, result) {
   var len = 0;
 
   if (geotype === 'LineString') {
-    len = lineDistance(road, 'miles');
+    len = lineDistance(road, 'kilometers');
 
   } else if (geotype === 'MultiLineString') {
     for (var i = 0; i < road.geometry.coordinates.length; i++) {
