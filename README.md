@@ -1,6 +1,6 @@
 # Compute Road Coverage in OpenStreetMap
 
-A [TileReduce](https://github.com/mapbox/tile-reduce) processor for calculating OpenStreetMap mileage by country using [OSM QA Tiles](http://osmlab.github.io/osm-qa-tiles/).
+A [TileReduce](https://github.com/mapbox/tile-reduce) processor for calculating OpenStreetMap mileage by country or region using [OSM QA Tiles](http://osmlab.github.io/osm-qa-tiles/).
 
 See [How Complete is OpenStreetMap?](https://www.mapbox.com/blog/how-complete-is-openstreetmap/).
 
@@ -12,7 +12,7 @@ See [How Complete is OpenStreetMap?](https://www.mapbox.com/blog/how-complete-is
 ## Installation
 
 ```
-npm install 
+npm install
 ```
 
 ## Downloading data
@@ -32,7 +32,7 @@ node download.js --all
 ```
 
 
-### Only country boundaries
+### Only country boundaries (admin0)
 
 ```sh
 node download.js --countries
@@ -40,9 +40,17 @@ node download.js --countries
 
 This will automatically download and convert the [Natural Earth 10m Countries](http://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/) dataset.
 
-### osm qa tiles
+### Only states (admin1)
 
-OSM QA tiles are very large - about 18 GB.
+```sh
+node download.js --states
+```
+
+This will automatically download and convert the [Natural Earth 10m States](http://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-1-states-provinces/) dataset.
+
+### OSM QA tiles
+
+[OSM QA tiles](http://osmlab.github.io/osm-qa-tiles/) are very large - about 18 GB.
 
 ```sh
 node download.js --osm
@@ -63,4 +71,3 @@ node index.js --area=[-77.12,38.79,-76.9,39] > output.json
 ```
 
 If no bounding box is provided, `osm-coverage` will run for the whole world.
-
