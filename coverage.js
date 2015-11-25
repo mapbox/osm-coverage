@@ -5,9 +5,11 @@ var lineclip = require('lineclip'),
   tilebelt = require('tilebelt'),
   tilecover = require('tile-cover'),
   which = require('which-polygon'),
+  states = require('./natural-earth-10m-states.json'),
   countries = require('./natural-earth-10m-countries.json');
-
+var stateIndex = which(states);
 var countryIndex = which(countries);
+
 
 // Mappings for general classifications
 var roadClasses = {
@@ -35,18 +37,27 @@ var roadClasses = {
   sidewalk: "paths"
 };
 
-module.exports = function (tileLayers, tile, write, done) {
+module.exports = function(tileLayers, tile, write, done) {
   var bbox = tilebelt.tileToBBOX(tile);
   var country = findCountry(tile, countryIndex);
+  var state = findState(tile, stateIndex);
 
   var resultClasses = {};
-  resultClasses[country] = {"classified": {}, "raw": {}};
+  resultClasses[country] = {
+    "classified": {},
+    "raw": {}
+  };
+  resultClasses[states] = {
+    "classified": {},
+    "raw": {}
+  };
 
   for (var i = 0; i < tileLayers.osm.osm.length; i++) {
     var ft = tileLayers.osm.osm.feature(i);
 
     if (ft.properties.highway) {
       handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[country]);
+      handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[states]);
     }
   }
 
@@ -85,4 +96,11 @@ function findCountry(tile, countryIndex) {
   var matchedCountries = countryIndex.bbox(bbox);
 
   return (matchedCountries.length > 0) ? matchedCountries[0].GEOUNIT : 'Unknown';
+};
+
+function findState(tile, stateIndex) {
+  var bbox = tilebelt.tileToBBOX(tile);
+  var matchedStates = stateIndex.bbox(bbox);
+
+  return (matchedStates.length > 0) ? matchedStates[0].name : 'Unknown';
 };
