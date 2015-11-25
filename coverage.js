@@ -47,17 +47,17 @@ module.exports = function(tileLayers, tile, write, done) {
     "classified": {},
     "raw": {}
   };
-  resultClasses[states] = {
-    "classified": {},
-    "raw": {}
-  };
+  // resultClasses[states] = {
+  //   "classified": {},
+  //   "raw": {}
+  // };
 
   for (var i = 0; i < tileLayers.osm.osm.length; i++) {
     var ft = tileLayers.osm.osm.feature(i);
 
     if (ft.properties.highway) {
       handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[country]);
-      handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[states]);
+      //handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[states]);
     }
   }
 
@@ -94,13 +94,11 @@ function handleRoad(road, bbox, result) {
 function findCountry(tile, countryIndex) {
   var bbox = tilebelt.tileToBBOX(tile);
   var matchedCountries = countryIndex.bbox(bbox);
-
   return (matchedCountries.length > 0) ? matchedCountries[0].GEOUNIT : 'Unknown';
 };
 
 function findState(tile, stateIndex) {
   var bbox = tilebelt.tileToBBOX(tile);
   var matchedStates = stateIndex.bbox(bbox);
-
   return (matchedStates.length > 0) ? matchedStates[0].name : 'Unknown';
 };

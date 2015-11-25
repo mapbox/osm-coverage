@@ -3,11 +3,11 @@ var tilereduce = require('tile-reduce');
 var opts = {
   zoom: 15,
   sourceCover: 'osm',
-  bbox: [-100, 40, -99, 41],
+  bbox: [77, 12, 78, 13],
   sources: [
     {
       name: 'osm',
-      mbtiles: __dirname+'/../data/latest.planet-z12.mbtiles'
+      mbtiles: __dirname+'/../data/latest.planet.mbtiles'
     }
   ],
   map: __dirname+'/coverage.js'
