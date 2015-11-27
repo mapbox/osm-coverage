@@ -15,26 +15,26 @@ var countryIndex = which(countries);
 var roadClasses = {
   motorway: "motor",
   trunk: "motor",
-  motorway_link: "motor",
-  trunk_link: "motor",
+  //motorway_link: "motor",
+  //trunk_link: "motor",
   primary: "motor",
   secondary: "motor",
   tertiary: "motor",
-  primary_link: "motor",
-  secondary_link: "motor",
-  tertiary_link: "motor",
-  service: "motor",
+  //primary_link: "motor",
+  //secondary_link: "motor",
+  //tertiary_link: "motor",
+  //service: "motor",
   residential: "motor",
   unclassified: "motor",
-  living_street: "motor",
-  road: "motor",
+  living_street: "motor"
+  //road: "motor",
 
-  footway: "paths",
-  cycleway: "paths",
-  path: "paths",
-  bridleway: "paths",
-  steps: "paths",
-  sidewalk: "paths"
+  //footway: "paths",
+  //cycleway: "paths",
+  //path: "paths",
+  //bridleway: "paths",
+  //steps: "paths",
+  //sidewalk: "paths"
 };
 
 module.exports = function(tileLayers, tile, write, done) {

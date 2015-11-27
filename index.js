@@ -3,7 +3,7 @@ var tilereduce = require('tile-reduce');
 var opts = {
   zoom: 15,
   sourceCover: 'osm',
-  bbox: [72, 7.5, 86.3, 20],
+  bbox: [68.42, 7.5, 97, 35.8],
   sources: [
     {
       name: 'osm',
