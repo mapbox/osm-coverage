@@ -1,17 +1,20 @@
-var tilereduce = require('tile-reduce');
+var tilereduce = require('tile-reduce'),
+  path = require('path'),
+  argv = require('minimist')(process.argv.slice(2));
 
 var opts = {
   zoom: 12,
-  sourceCover: 'osm',
   sources: [
     {
       name: 'osm',
-      mbtiles: __dirname+'/data/latest.planet.mbtiles',
+      mbtiles: path.join('../data/latest.planet.mbtiles'),
       raw: true
     }
   ],
   map: __dirname+'/coverage.js'
 };
+
+if (argv.area) opts.bbox = JSON.parse(argv.area);
 
 var counts = {};
 
