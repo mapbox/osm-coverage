@@ -12,7 +12,7 @@ See [How Complete is OpenStreetMap?](https://www.mapbox.com/blog/how-complete-is
 ## Installation
 
 ```
-npm install 
+npm install
 ```
 
 ## Downloading data

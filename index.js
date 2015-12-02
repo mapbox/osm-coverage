@@ -7,7 +7,7 @@ var opts = {
   sources: [
     {
       name: 'osm',
-      mbtiles: path.join('../data/latest.planet.mbtiles'),
+      mbtiles: path.join(__dirname, 'data/latest.planet.mbtiles'),
       raw: true
     }
   ],
