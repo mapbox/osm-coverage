@@ -3,11 +3,10 @@ var tilereduce = require('tile-reduce');
 var opts = {
   zoom: 12,
   sourceCover: 'osm',
-  bbox: [-100, 40, -99, 41],
   sources: [
     {
       name: 'osm',
-      mbtiles: __dirname+'/../data/latest.planet-z12.mbtiles',
+      mbtiles: __dirname+'/data/latest.planet.mbtiles',
       raw: true
     }
   ],
