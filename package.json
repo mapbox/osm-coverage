@@ -20,7 +20,7 @@
     "split": "^1.0.0",
     "through2": "^2.0.0",
     "tile-cover": "^3.0.1",
-    "tile-reduce": "^3.0.0",
+    "tile-reduce": "^3.0.2",
     "tilebelt": "^1.0.1",
     "turf-extent": "^1.0.4",
     "turf-line-distance": "^1.0.2",
