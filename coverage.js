@@ -74,6 +74,12 @@ function handleRoad(road, bbox, result) {
     }
   }
 
+  if ((road.properties.highway === 'motorway' || road.properties.highway === 'primary' || road.properties.highway === 'secondary')
+    && (road.properties.oneway === 'yes' || road.properties.oneway === 'true' || road.properties.oneway === '1')) {
+
+    result.detected_carriageway = (result.carriageway || 0) + len;
+  }
+
   result.raw[road.properties.highway] = (result.raw[road.properties.highway] || 0) + len;
   result.classified[classification] = (result.classified[classification] || 0) + len;
 

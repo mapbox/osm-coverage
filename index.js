@@ -31,7 +31,7 @@ function mapResults(result, saveTo) {
 
 var tilereduce = tilereduce(opts)
 .on('reduce', function(result, tile){
-  mapResults(result, counts)
+  mapResults(result, counts);
 })
 .on('end', function(error){
   console.log(JSON.stringify(counts));
