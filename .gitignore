@@ -1,2 +1,3 @@
-natural-earth-countries.json
+natural-earth-10m-countries.json
 latest.planet.mbtiles
+node_modules/*
