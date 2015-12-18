@@ -74,7 +74,7 @@ function handleRoad(road, bbox, result) {
     }
   }
 
-  if ((road.properties.highway === 'motorway' || road.properties.highway === 'primary' || road.properties.highway === 'secondary')
+  if ((road.properties.highway === 'motorway' || road.properties.highway === 'primary' || road.properties.highway === 'secondary' || road.properties.highway === 'trunk')
     && (road.properties.oneway === 'yes' || road.properties.oneway === 'true' || road.properties.oneway === '1')) {
 
     result.detected_carriageway = (result.carriageway || 0) + len;
