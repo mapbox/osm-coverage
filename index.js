@@ -7,7 +7,7 @@ var opts = {
   sources: [
     {
       name: 'osm',
-      mbtiles: __dirname+'/../data/latest.planet.mbtiles',
+      mbtiles: __dirname+'/downloads/latest.planet.mbtiles',
       raw: true
     }
   ],
