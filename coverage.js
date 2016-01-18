@@ -76,7 +76,7 @@ function handleRoad(road, bbox, result) {
 
   } else if (geotype === 'MultiLineString') {
     for (var i = 0; i < road.geometry.coordinates.length; i++) {
-      len += lineDistance(linestring(road.geometry.coordinates[i]), 'miles');
+      len += lineDistance(linestring(road.geometry.coordinates[i]), 'kilometers');
     }
   }
 
