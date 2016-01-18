@@ -25,7 +25,7 @@ npm install
 
 ### All sources
 
-Both sources can be conveniently downloaded using the `download.js` script in this repo.
+All sources can be conveniently downloaded using the `download.js` script in this repo.
 
 ```sh
 node download.js --all
