@@ -7,8 +7,11 @@ var split = require('split'),
   shapefile = require('shapefile-stream'),
   join = require('join-stream')
   zlib = require('zlib'),
-  ProgressBar = require('progress');
+  ProgressBar = require('progress'),
+  mkdirp = require('mkdirp');
 
+
+mkdirp.sync(path.join(__dirname, 'data'));
 
 if (process.argv[2] === '--all' || process.argv[2] === '--countries') {
   downloadCountries();
@@ -20,7 +23,8 @@ if (process.argv[2] === '--all' || process.argv[2] === '--osm') {
 
 
 function downloadOsmQa() {
-  var output = fs.createWriteStream(path.join(__dirname, 'latest.planet.mbtiles'));
+  
+  var output = fs.createWriteStream(path.join(__dirname, 'data/latest.planet.mbtiles'));
   request({method: 'HEAD', uri: 'https://s3.amazonaws.com/mapbox/osm-qa-tiles/latest.planet.mbtiles.gz'}, function (err, res, dt) {
     var len = Number(res.toJSON().headers['content-length']);
     var progress = new ProgressBar('[:bar] :percent ETA :etas', {total: len});
@@ -37,7 +41,7 @@ function downloadOsmQa() {
 }
 
 function downloadCountries() {
-  var output = fs.createWriteStream(path.join(__dirname, 'natural-earth-10m-countries.json'));
+  var output = fs.createWriteStream(path.join(__dirname, 'data/natural-earth-10m-countries.json'));
   output.write('{"type": "FeatureCollection", "features": [');
 
   // Download natural earth shp, unzip, -> read to geojson
@@ -50,7 +54,7 @@ function downloadCountries() {
         .pipe(output)
         .on('close', function () {
           console.log("Done");
-          fs.appendFileSync(path.join(__dirname, 'natural-earth-10m-countries.json'), ']}');
+          fs.appendFileSync(path.join(__dirname, 'data/natural-earth-10m-countries.json'), ']}');
         })
     });
 }

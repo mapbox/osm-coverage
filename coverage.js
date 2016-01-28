@@ -5,7 +5,7 @@ var lineclip = require('lineclip'),
   tilebelt = require('tilebelt'),
   tilecover = require('tile-cover'),
   which = require('which-polygon'),
-  countries = require('./natural-earth-10m-countries.json');
+  countries = require('./data/natural-earth-10m-countries.json');
 
 var countryIndex = which(countries);
 
