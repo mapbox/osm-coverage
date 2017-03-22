@@ -15,12 +15,6 @@ var opts = {
 };
 
 if (argv.area) opts.bbox = JSON.parse(argv.area);
-opts.bbox = [
-          -13.359375,
-          31.353636941500987,
-          6.328125,
-          45.336701909968106
-        ];
 var counts = {};
 
 function mapResults(result, saveTo) {

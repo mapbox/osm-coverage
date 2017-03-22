@@ -27,6 +27,6 @@
     "turf-line-distance": "^1.0.2",
     "turf-linestring": "^1.0.2",
     "unzip2": "^0.2.5",
-    "which-polygon": "mapbox/which-polygon#bbox"
+    "which-polygon": "^2.1.0"
   }
 }
