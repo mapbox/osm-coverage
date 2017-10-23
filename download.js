@@ -25,10 +25,10 @@ if (process.argv[2] === '--all' || process.argv[2] === '--osm') {
 function downloadOsmQa() {
   
   var output = fs.createWriteStream(path.join(__dirname, 'data/latest.planet.mbtiles'));
-  request({method: 'HEAD', uri: 'https://s3.amazonaws.com/mapbox/osm-qa-tiles/latest.planet.mbtiles.gz'}, function (err, res, dt) {
+  request({method: 'HEAD', uri: 'https://s3.amazonaws.com/mapbox/osm-qa-tiles-production/latest.planet.mbtiles.gz'}, function (err, res, dt) {
     var len = Number(res.toJSON().headers['content-length']);
     var progress = new ProgressBar('[:bar] :percent ETA :etas', {total: len});
-    var stream = request('https://s3.amazonaws.com/mapbox/osm-qa-tiles/latest.planet.mbtiles.gz');
+    var stream = request('https://s3.amazonaws.com/mapbox/osm-qa-tiles-production/latest.planet.mbtiles.gz');
     stream.on('data', function (data) {
       progress.tick(data.length);
     });
