@@ -1,6 +1,7 @@
 var tilereduce = require('tile-reduce'),
   path = require('path'),
   argv = require('minimist')(process.argv.slice(2));
+  fs = require('fs');
 
 var opts = {
   zoom: 12,
@@ -15,6 +16,11 @@ var opts = {
 };
 
 if (argv.area) opts.bbox = JSON.parse(argv.area);
+
+var countries_path = path.join(__dirname, 'data/ne_50m_admin_0_countries.geojson');
+var contents = fs.readFileSync(countries_path);
+var countries = JSON.parse(contents);
+
 var counts = {};
 
 function mapResults(result, saveTo) {
@@ -29,9 +35,19 @@ function mapResults(result, saveTo) {
 }
 
 var tilereduce = tilereduce(opts)
-.on('reduce', function(result, tile){
+.on('reduce', function(result){
   mapResults(result, counts)
 })
-.on('end', function(error){
-  console.log(JSON.stringify(counts));
+.on('end', function(){
+  // Works
+  countries.features.forEach(country =>
+    // { console.log(country.properties) })
+    { country.properties['stats'] = counts[country.properties.name] })
+
+  // Doesn't work
+  var found = countries.find(function(element) {
+    return element.features['properties']['name'] === 'Costa Rica';
+  });
+  console.log(found)
+
 });
