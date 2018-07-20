@@ -44,7 +44,7 @@ module.exports = function (tileLayers, tile, write, done) {
 
   for (var i = 0; i < tileLayers.osm.osm.length; i++) {
     var ft = tileLayers.osm.osm.feature(i);
-
+    console.log(ft.properties)
     if (ft.properties.highway) {
       handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[country]);
     }
