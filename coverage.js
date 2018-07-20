@@ -45,6 +45,7 @@ module.exports = function (tileLayers, tile, write, done) {
   for (var i = 0; i < tileLayers.osm.osm.length; i++) {
     var ft = tileLayers.osm.osm.feature(i);
     console.log(ft.properties)
+
     if (ft.properties.highway) {
       handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[country]);
     }
@@ -77,7 +78,31 @@ function handleRoad(road, bbox, result) {
   result.raw[road.properties.highway] = (result.raw[road.properties.highway] || 0) + len;
   result.classified[classification] = (result.classified[classification] || 0) + len;
 
+  if (road.properties.oneway !== ('no' || 0 || -1)) {
+    result.raw['oneway'] = (result.raw['oneway'] || 0) + len;
+  }
+
+  if (!road.properties.oneway) {
+    result.raw['onewayness_unknown'] = (result.raw['onewayness_unknown'] || 0) + len;
+  }  
+
+  if (road.properties.maxspeed) {
+    result.raw['maxspeed'] = (result.raw['maxspeed'] || 0) + len;
+  }
+
+  if (road.properties.surface) {
+    result.raw['surface'] = (result.raw['surface'] || 0) + len;
+  }
+
   return true;
+}
+
+
+function handlePlaces(place, bbox, result) {
+  var geotype = place.geometry.type;
+  if (!place.properties.highway || geotype !== "LineString" && geotype !== "MultiLineString") return false;
+
+  var len = 0;
 }
 
 function findCountry(tile, countryIndex) {
