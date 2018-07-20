@@ -39,15 +39,27 @@ var tilereduce = tilereduce(opts)
   mapResults(result, counts)
 })
 .on('end', function(){
-  // Works
-  countries.features.forEach(country =>
-    // { console.log(country.properties) })
-    { country.properties['stats'] = counts[country.properties.name] })
+  var count = 0
+  countries.features.forEach(country => {
+    country.properties['stats'] = counts[country.properties.name]
 
-  // Doesn't work
-  var found = countries.find(function(element) {
-    return element.features['properties']['name'] === 'Costa Rica';
+    // if (!typeof country.properties['stats'] === "undefined") {
+    //     Object.keys(country.properties.stats).forEach(statL1 => {
+    //       console.log(country.properties.stats[statL1]);
+    //     });      
+    // }
+    // console.log(country.properties['stats'])
+
+    count +=1
+
+    if (count >= (countries.features.length)) {
+      var found = countries.features.find(function(element) {
+        return element['properties']['name'] === 'Costa Rica';
+      });
+      console.log(found)
+    }
   });
-  console.log(found)
+
+
 
 });
