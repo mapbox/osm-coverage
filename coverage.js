@@ -35,20 +35,51 @@ var roadClasses = {
   sidewalk: "paths"
 };
 
+var amenityClasses = {
+  restaurant: "restaurant",
+  fuel: "fuel",
+  cafe: "cafe",
+  fast_food: "fast_food",
+  place_of_worship: "place_of_worship",
+  bank: "bank",
+  pharmacy: "pharmacy",
+  post_office: "post_office",
+  hospital: "hospital",
+  doctors: "doctors",
+  public_building: "public_building",
+  community_centre: "community_centre",
+  clinic: "clinic",
+  library: "library",
+  dentist: "dentist",
+  theatre: "theatre",
+  parking: "parking",
+  kindergarten: "education",
+  school: "education",
+  college: "education",
+  university: "education",
+  bar: "bars",
+  pub: "bars",
+  nightclub: "bars"
+}
+
 module.exports = function (tileLayers, tile, write, done) {
   var bbox = tilebelt.tileToBBOX(tile);
   var country = findCountry(tile, countryIndex);
 
   var resultClasses = {};
-  resultClasses[country] = {"classified": {}, "raw": {}};
+  resultClasses[country] = {"roads": {"classified": {}, "raw": {}}, "places": {"classified": {}, "amenity_type": {}}};
 
   for (var i = 0; i < tileLayers.osm.osm.length; i++) {
     var ft = tileLayers.osm.osm.feature(i);
-    console.log(ft.properties)
+    // console.log(ft.properties)
 
     if (ft.properties.highway) {
       handleRoad(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[country]);
     }
+    
+    if (!ft.properties.highway) {
+      handlePlace(ft.toGeoJSON(tile[0], tile[1], tile[2]), bbox, resultClasses[country]);
+    }    
   }
 
   done(null, resultClasses);
@@ -61,6 +92,7 @@ module.exports = function (tileLayers, tile, write, done) {
  */
 function handleRoad(road, bbox, result) {
   var geotype = road.geometry.type;
+  // console.log(geotype)
   var classification = roadClasses[road.properties.highway] || 'unclassified';
   if (!road.properties.highway || geotype !== "LineString" && geotype !== "MultiLineString") return false;
 
@@ -75,34 +107,62 @@ function handleRoad(road, bbox, result) {
     }
   }
 
-  result.raw[road.properties.highway] = (result.raw[road.properties.highway] || 0) + len;
-  result.classified[classification] = (result.classified[classification] || 0) + len;
+  result.roads.raw[road.properties.highway] = (result.roads.raw[road.properties.highway] || 0) + len;
+  result.roads.classified[classification] = (result.roads.classified[classification] || 0) + len;
 
   if (road.properties.oneway !== ('no' || 0 || -1)) {
-    result.raw['oneway'] = (result.raw['oneway'] || 0) + len;
+    result.roads.raw['oneway'] = (result.roads.raw['oneway'] || 0) + len;
   }
 
   if (!road.properties.oneway) {
-    result.raw['onewayness_unknown'] = (result.raw['onewayness_unknown'] || 0) + len;
+    result.roads.raw['onewayness_unknown'] = (result.roads.raw['onewayness_unknown'] || 0) + len;
   }  
 
   if (road.properties.maxspeed) {
-    result.raw['maxspeed'] = (result.raw['maxspeed'] || 0) + len;
+    result.roads.raw['maxspeed'] = (result.roads.raw['maxspeed'] || 0) + len;
   }
 
   if (road.properties.surface) {
-    result.raw['surface'] = (result.raw['surface'] || 0) + len;
+    result.roads.raw['surface'] = (result.roads.raw['surface'] || 0) + len;
   }
 
   return true;
 }
 
 
-function handlePlaces(place, bbox, result) {
+function handlePlace(place, bbox, result) {
   var geotype = place.geometry.type;
-  if (!place.properties.highway || geotype !== "LineString" && geotype !== "MultiLineString") return false;
+  var classification = amenityClasses[place.properties.amenity] || 'amenity_unclassified';
+  
+  if (place.properties.highway) return false;
 
-  var len = 0;
+  var count = 0;
+
+  if (geotype == 'Point') {
+    result.places.classified['points'] = (result.places.classified['points'] || 0) + 1;
+  }
+
+  if ((geotype == 'Point') && (place.properties.building)) {
+    result.places.classified['point_and_building'] = (result.places.classified['point_and_building'] || 0) + 1;
+  }
+
+  if (place.properties.building) {
+    result.places.classified['building'] = (result.places.classified['building'] || 0) + 1;
+  }
+
+  if (place.properties.amenity) {
+    result.places.classified['amenity'] = (result.places.classified['amenity'] || 0) + 1;
+    result.places.amenity_type[classification] = (result.places.amenity_type[classification] || 0) + 1;
+  }
+
+  if ((place.properties.building) && (place.properties.amenity)) {
+    result.places.classified['amenity_and_building'] = (result.places.classified['amenity_and_building'] || 0) + 1;
+  }
+
+  if (place.properties.building === ('house' || 'residential' || 'apartments' || 'hut')) {
+    result.places.classified['building_residential'] = (result.places.classified['building_residential'] || 0) + 1;
+  }
+
 }
 
 function findCountry(tile, countryIndex) {
