@@ -65,11 +65,16 @@ var tilereduce = tilereduce(opts)
     count +=1
 
     if (count >= (countries.features.length)) {
-      var found = countries.features.find(function(element) {
-        return element['properties']['name'] === 'Costa Rica';
-      });
-      console.log(found['properties']['stats_per_pop']['roads'])
+      console.log(JSON.stringify(countries))
     }
+    
+    //   var found = countries.features.find(function(element) {
+    //     return element['properties']['name'] === 'Costa Rica';
+    //   });
+    //   console.log(found['properties']['stats_per_pop']['roads'])
+    //   // console.log(JSON.stringify(countries));
+
+    // }
   });
 
 
