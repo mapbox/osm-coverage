@@ -42,33 +42,34 @@ var tilereduce = tilereduce(opts)
   var count = 0
   countries.features.forEach(country => {
     country.properties['stats'] = counts[country.properties.name]
+    country.properties['stats_per_pop'] = {}
 
     if (typeof country.properties['stats'] !== "undefined") {
         Object.keys(country.properties.stats).forEach(statL1 => {
-          // console.log(country.properties.stats[statL1]);
-          // console.log('stahp')
-        
+
           Object.keys(country.properties.stats[statL1]).forEach(statL2 => {
-            // console.log(country.properties.stats[statL1][statL2]); 
-            // console.log('stahp');
 
             Object.keys(country.properties.stats[statL1][statL2]).forEach(statL3 => {
-              console.log(country.properties.stats[statL1][statL2][statL3]);
+              // TODO: make this monstrocity look better
+              country.properties['stats_per_pop'][statL1] = country.properties['stats_per_pop'][statL1] || {}
+              country.properties['stats_per_pop'][statL1][statL2] = country.properties['stats_per_pop'][statL1][statL2] || {}
+              country.properties['stats_per_pop'][statL1][statL2][statL3] = country.properties['stats_per_pop'][statL1][statL3] || {}
+              country.properties['stats_per_pop'][statL1][statL2][statL3] = country.properties.stats[statL1][statL2][statL3]/country.properties.pop_est
+
             }); 
 
           }); 
         });      
     }
-    // console.log(country.properties['stats'])
 
-    // count +=1
+    count +=1
 
-    // if (count >= (countries.features.length)) {
-    //   var found = countries.features.find(function(element) {
-    //     return element['properties']['name'] === 'Costa Rica';
-    //   });
-    //   console.log(found)
-    // }
+    if (count >= (countries.features.length)) {
+      var found = countries.features.find(function(element) {
+        return element['properties']['name'] === 'Costa Rica';
+      });
+      console.log(found['properties']['stats_per_pop']['roads'])
+    }
   });
 
 
