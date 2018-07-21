@@ -43,21 +43,32 @@ var tilereduce = tilereduce(opts)
   countries.features.forEach(country => {
     country.properties['stats'] = counts[country.properties.name]
 
-    // if (!typeof country.properties['stats'] === "undefined") {
-    //     Object.keys(country.properties.stats).forEach(statL1 => {
-    //       console.log(country.properties.stats[statL1]);
-    //     });      
-    // }
+    if (typeof country.properties['stats'] !== "undefined") {
+        Object.keys(country.properties.stats).forEach(statL1 => {
+          // console.log(country.properties.stats[statL1]);
+          // console.log('stahp')
+        
+          Object.keys(country.properties.stats[statL1]).forEach(statL2 => {
+            // console.log(country.properties.stats[statL1][statL2]); 
+            // console.log('stahp');
+
+            Object.keys(country.properties.stats[statL1][statL2]).forEach(statL3 => {
+              console.log(country.properties.stats[statL1][statL2][statL3]);
+            }); 
+
+          }); 
+        });      
+    }
     // console.log(country.properties['stats'])
 
-    count +=1
+    // count +=1
 
-    if (count >= (countries.features.length)) {
-      var found = countries.features.find(function(element) {
-        return element['properties']['name'] === 'Costa Rica';
-      });
-      console.log(found)
-    }
+    // if (count >= (countries.features.length)) {
+    //   var found = countries.features.find(function(element) {
+    //     return element['properties']['name'] === 'Costa Rica';
+    //   });
+    //   console.log(found)
+    // }
   });
 
 
