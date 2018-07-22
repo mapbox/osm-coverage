@@ -8,12 +8,29 @@ var opts = {
   sources: [
     {
       name: 'osm',
-      mbtiles: path.join(__dirname, 'data/costa_rica.mbtiles'),
+      mbtiles: path.join(__dirname, 'data/latest.planet.mbtiles'),
       raw: true
     }
   ],
   map: __dirname+'/coverage.js'
 };
+
+var stdCountries = {
+    "United States":"United States of America",
+    "Dem. Rep. Congo":"Democratic Republic of the Congo",
+    "Congo":"Republic of the Congo",
+    "Central African Rep.":"Central African Republic",
+    "S. Sudan":"South Sudan",
+    "Eq. Guinea":"Equatorial Guinea",
+    "Côte d'Ivoire":"Ivory Coast",
+    "Serbia":"Republic of Serbia",
+    "Bosnia and Herz.":"Bosnia and Herzegovina",
+    "Czech Rep.":"Czechia",
+    "Lao PDR":"Laos",
+    "Korea":"South Korea",
+    "Dem. Rep. Korea":"North Korea",
+    "Dominican Rep.":"Dominican Republic"
+}
 
 if (argv.area) opts.bbox = JSON.parse(argv.area);
 
@@ -41,6 +58,10 @@ var tilereduce = tilereduce(opts)
 .on('end', function(){
   var count = 0
   countries.features.forEach(country => {
+    if (country.properties['name'] in stdCountries) {
+      country.properties['name'] = stdCountries[country.properties['name']]
+    }
+
     country.properties['stats'] = counts[country.properties.name]
     country.properties['stats_per_pop'] = {}
 
@@ -67,16 +88,15 @@ var tilereduce = tilereduce(opts)
     if (count >= (countries.features.length)) {
       console.log(JSON.stringify(countries))
     }
-    
-    //   var found = countries.features.find(function(element) {
-    //     return element['properties']['name'] === 'Costa Rica';
-    //   });
-    //   console.log(found['properties']['stats_per_pop']['roads'])
-    //   // console.log(JSON.stringify(countries));
 
+    // if (count >= (countries.features.length)) {
+    //   var found = countries.features.find(function(element) {  
+    //     return element['properties']['name'] === 'Russia';
+    //   });
+    //   console.log(found)
+    //   console.log(found['properties']['stats'])
+    //   console.log(found['properties']['stats_per_pop'])
     // }
   });
-
-
 
 });
