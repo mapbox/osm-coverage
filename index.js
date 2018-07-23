@@ -58,44 +58,31 @@ var tilereduce = tilereduce(opts)
 .on('end', function(){
   var count = 0
   countries.features.forEach(country => {
+
+    // Standardize country names between the datasets
     if (country.properties['name'] in stdCountries) {
       country.properties['name'] = stdCountries[country.properties['name']]
     }
 
-    country.properties['stats'] = counts[country.properties.name]
-    country.properties['stats_per_pop'] = {}
-
-    if (typeof country.properties['stats'] !== "undefined") {
-        Object.keys(country.properties.stats).forEach(statL1 => {
-
-          Object.keys(country.properties.stats[statL1]).forEach(statL2 => {
-
-            Object.keys(country.properties.stats[statL1][statL2]).forEach(statL3 => {
-              // TODO: make this monstrocity look better
-              country.properties['stats_per_pop'][statL1] = country.properties['stats_per_pop'][statL1] || {}
-              country.properties['stats_per_pop'][statL1][statL2] = country.properties['stats_per_pop'][statL1][statL2] || {}
-              country.properties['stats_per_pop'][statL1][statL2][statL3] = country.properties['stats_per_pop'][statL1][statL3] || {}
-              country.properties['stats_per_pop'][statL1][statL2][statL3] = country.properties.stats[statL1][statL2][statL3]/country.properties.pop_est
-
-            }); 
-
-          }); 
-        });      
-    }
+    // Copy the stats and stats per pop to country properties
+    if (Object.keys(counts).indexOf(country.properties.name) > -1) {
+      Object.keys(counts[country.properties.name]).forEach (s => {
+        country.properties[s] = counts[country.properties.name][s]
+        country.properties[s+"_per_pop"] = counts[country.properties.name][s] / country.properties.pop_est
+      });
+   }
 
     count +=1
-
+    
     if (count >= (countries.features.length)) {
       console.log(JSON.stringify(countries))
     }
 
     // if (count >= (countries.features.length)) {
     //   var found = countries.features.find(function(element) {  
-    //     return element['properties']['name'] === 'Russia';
+    //     return element['properties']['name'] === 'United States of America';
     //   });
-    //   console.log(found)
-    //   console.log(found['properties']['stats'])
-    //   console.log(found['properties']['stats_per_pop'])
+    //   console.log(found['properties'])
     // }
   });
 
