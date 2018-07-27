@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>OSM coverage</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        #sidebar {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            bottom: 15px;
+            width: 350px;
+            overflow: auto;
+            background: rgba(255, 255, 255, 0.8);
+            font-family: "Arial";
+            padding-left: 10px;
+       }
+
+      #menu {
+          background: #fff;
+          position: absolute;
+          z-index: 1;
+          top: 10px;
+          right: 10px;
+          border-radius: 3px;
+          width: 200px;
+          border: 1px solid rgba(0,0,0,0.4);
+          font-family: 'Open Sans', sans-serif;
+      }
+
+      #menu a {
+          font-size: 13px;
+          color: #404040;
+          display: block;
+          margin: 0;
+          padding: 0;
+          padding: 10px;
+          text-decoration: none;
+          border-bottom: 1px solid rgba(0,0,0,0.25);
+          text-align: center;
+      }
+
+      #menu a:last-child {
+          border: none;
+      }
+
+      #menu a:hover {
+          background-color: #f8f8f8;
+          color: #404040;
+      }
+
+      #menu a.inactive {
+          background-color: #fff;
+          color: #404040;
+      }     
+
+      #menu a.active {
+          background-color: #3887be;
+          color: #ffffff;
+      }
+
+
+      #menu a.active:hover {
+          background: #3074a4;
+      }
+        
+    </style>
+
+</head>
+
+<body>
+  <nav id="menu"></nav>
+
+    <div id='map'></div>
+    <div id='sidebar'>
+        <h1>OSM coverage by country</h1>
+        <h3><div id='tooltip-0'></div></h3>
+        <br><b><div id="tooltip-name"></div></b>
+      <br>
+        <div id='tooltip-1'></div>
+        <div id='tooltip-2'></div>
+        <div id='tooltip-3'></div>
+        <div id='tooltip-4'></div>
+        <div id='tooltip-5'></div>
+        <div id='tooltip-6'></div>
+        <div id='tooltip-7'></div>
+        <div id='tooltip-8'></div>
+        <div id='tooltip-9'></div>
+        <div id='tooltip-10'></div>
+        <div id='tooltip-11'></div>
+        <div id='tooltip-12'></div>
+        <div id='tooltip-13'></div>
+        <div id='tooltip-14'></div>
+        <div id='tooltip-15'></div>
+        <div id='tooltip-16'></div> 
+        <div id='tooltip-17'></div>
+        <div id='tooltip-18'></div>
+        <div id='tooltip-19'></div>
+        <div id='tooltip-20'></div>                   
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1IjoiaHJlY2h0IiwiYSI6IlFwV2hZMlUifQ.dwfwZ5jzPU1xv2mYYVzXlQ';
+      var dataURL = 'https://gist.githubusercontent.com/s-heisler/b71973d731d8b67462b031caee19f4d6/raw/d43c7e23ad9797f12cbf542f11a8cf857505d12f/test_stuff.geojson'
+      
+      // Dict of all properties that will be added as layers
+      var layerDict = {
+        'road_class_motor_per_pop': 'Roads: motorways (km)',
+        'road_class_paths_per_pop': 'Roads: pathways (km)',
+        'roads_oneway_per_pop': 'Roads: oneway (km)',
+        'roads_maxspeed_per_pop': 'Roads: with speed limit',
+        'roads_surface_per_pop': 'Roads: with surface (km)',
+        'amenity_bars_per_pop': 'Amenity: bars per 1k pop',
+        'amenity_clinic_per_pop': 'Amenity: clinics per 1k pop',
+        'amenity_doctors_per_pop': 'Amenity: doctors',
+        'amenity_education_per_pop': 'Amenity: education buildings',
+        'amenity_hospital_per_pop': 'Amenity: hospital',
+        'amenity_place_of_worship_per_pop': 'Amenity: places of worship',
+        'amenity_restaurant_per_pop': 'Amenity: restaurant',
+        'places_amenity_and_building_per_pop': 'Places: amenity && building',
+        'places_amenity_per_pop': 'Places: amenity',
+        'places_building_per_pop': 'Places: building',
+        'places_building_residential_per_pop': 'Places: residential building',
+        'places_points_per_pop': 'Places: points'
+      }
+
+      var layerVars = Object.keys(layerDict)
+      var toggleableLayerIds = Object.values(layerDict)
+      var layerArrays = [];
+      var layerQuantiles = [];
+
+      //globals for the choropleth
+      var COLORS = ['#f6eff7', '#d0d1e6', '#a6bddb', '#67a9cf', '#1c9099', '#016c59', ],
+          filteruse;
+
+      $.getJSON(dataURL, function (data) {
+
+        // Create an array to store the arrays of vars in
+        for (var i = 0; i < layerVars.length; ++i) {
+            layerArrays[i] = [];
+        }
+
+        // Fill in the arrays with numeric values
+        counter = 0
+        data.features.forEach ( country => {
+          for (var i = 0; i < layerVars.length; ++i) {
+            if (typeof country.properties[layerVars[i]] != 'undefined') {
+              layerArrays[i].push(country.properties[layerVars[i]]);
+            }
+          }
+          counter += 1
+        });
+
+        // Once all the arrays are filled in, calculate quantiles
+        if (counter >= data.features.length) {
+          for (var i = 0; i < layerVars.length; ++i) {
+            layerQuantiles[i] = createPercentiles(layerArrays[i], 5)
+          }
+        }
+
+      });    
+
+      function createPercentiles(arr, numPercentiles) {
+        arr.sort(function (a, b) {  return a - b;  });
+        // Always start at 0
+        result = [0];
+        // Calculate percentiles
+        for (var i = 1; i < numPercentiles; ++i) {
+          var index =  Math.floor(arr.length * (1/numPercentiles) * i) - 1;
+          result.push(arr[index])
+        };
+        // Close the array with the max
+        result.push(Math.max.apply(Math,arr));
+        return(result);
+      };
+    
+      //create a map using the Mapbox Light theme
+      var map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/light-v8',
+          zoom: 1,
+          center: [-77.014576, 38.899396]
+      });
+
+      // Add zoom and rotation controls to the map.
+      map.addControl(new mapboxgl.Navigation());
+
+      map.on('load', function () {
+          map.addSource('countries', {
+              type: 'geojson',
+              data: dataURL
+          });
+
+          // Add all the layers
+          for (var i = 0; i<layerVars.length; ++i) {
+            addNewLayer(layerVars[i]);
+          }
+          
+      });
+    
+    // Create the clicky buttons
+    for (var i = 0; i < toggleableLayerIds.length; i++) {
+        var id = toggleableLayerIds[i];
+        var link = document.createElement('a');
+        link.href = '#';
+        link.textContent = id;
+        link.id = i;
+
+        link.onclick = function (e) {
+            var clickedLayer = this.textContent;
+            e.preventDefault();
+            e.stopPropagation();
+
+            var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+            if (visibility === 'visible') {
+                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                this.className = '';
+            } else {
+                for (var j = 0; j<toggleableLayerIds.length; ++j) {
+                  map.setLayoutProperty(toggleableLayerIds[j], 'visibility', 'none');
+                  document.getElementById(j).className = ''
+                }
+
+                this.className = 'active';
+                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+            }
+        };
+
+        var layers = document.getElementById('menu');
+        layers.appendChild(link);
+    }
+
+    // Match up the choropleth cut-offs with the color list, regardless of length
+    function setStops (stopList, colorList) {
+      var stops = [];
+      for (var i = 0; i < stopList.length; i++) {
+        stops.push([stopList[i], colorList[i]])
+      };
+      return stops;
+    }
+
+    // Add new layer
+    function addNewLayer (layerProperty) {
+      map.addLayer({
+                "id": layerDict[layerProperty],
+                "type": "fill",
+                "source": "countries",
+                'layout': {
+                'visibility': 'none'
+            },
+                "paint": {
+                    "fill-color": {
+                        property: layerProperty,
+                        stops: setStops(layerQuantiles[layerVars.indexOf(layerProperty)], COLORS)
+                    },
+                    "fill-opacity": 0.7,
+                    "fill-outline-color": "#ffffff"
+                }
+            });
+    };
+
+      // Plot the hover-overs
+      map.on("mousemove", function (e) {
+          var features = map.queryRenderedFeatures(e.point, {
+              layers: toggleableLayerIds
+          });
+
+          if (features.length) {
+              //show name and value in sidebar
+              document.getElementById('tooltip-0').innerHTML = "All statistics are per 1,000 population";                
+              document.getElementById('tooltip-name').innerHTML = "Country: " + features[0].properties.name;
+              document.getElementById('tooltip-1').innerHTML = 'Population (M): ' + (features[0].properties.pop_est/1000000).toFixed(1);
+              
+              for (var i = 0; i < layerVars.length; i++) {
+                document.getElementById('tooltip-' + (i+2)).innerHTML = toggleableLayerIds[i] + ": " + Math.round(features[0].properties[layerVars[i]] * 100000)/100;
+              }
+
+          } else {
+              //if not hovering over a feature set tooltip to empty
+              document.getElementById('tooltip-name').innerHTML = "";                
+              for (var i = 0; i < layerVars.length; i++) {
+                document.getElementById('tooltip-'+i).innerHTML = "";
+
+              }
+           }
+      });
+    </script>
+
+</body>
+
+</html>
