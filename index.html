@@ -114,7 +114,7 @@
         <div id='tooltip-19'></div>
         <div id='tooltip-20'></div>                   
     </div>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
     <script>
       mapboxgl.accessToken = 'pk.eyJ1IjoiaHJlY2h0IiwiYSI6IlFwV2hZMlUifQ.dwfwZ5jzPU1xv2mYYVzXlQ';
@@ -296,7 +296,7 @@
           } else {
               //if not hovering over a feature set tooltip to empty
               document.getElementById('tooltip-name').innerHTML = "";                
-              for (var i = 0; i < layerVars.length; i++) {
+              for (var i = 0; i < layerVars.length+2; i++) {
                 document.getElementById('tooltip-'+i).innerHTML = "";
 
               }
